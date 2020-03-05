@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
+import Movie from "./movie";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,6 +22,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 function App() {
   const classes = useStyles();
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  useEffect(() => {
+    fetch("https://mymovies20200226033827.azurewebsites.net/api/movies")
+      .then(res => res.json())
+      .then(setMovies);
+  }, []);
 
   return (
     <div className={classes.root}>
@@ -33,6 +40,11 @@ function App() {
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
+      <ul>
+        {movies.map(movie => (
+          <li key={movie.id}>{movie.title}</li>
+        ))}
+      </ul>
     </div>
   );
 }
